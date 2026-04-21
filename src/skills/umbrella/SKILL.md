@@ -3,7 +3,7 @@ name: umbrella
 description: Manage WordPress sites through the WP Umbrella Public API. Use whenever the user asks to list their projects/sites, check status, diagnose issues, update plugins or themes, review vulnerabilities, find broken links, optimize their WordPress database, manage maintenance customers, or perform any action against sites they operate via WP Umbrella.
 ---
 
-# umbrella
+# Umbrella skill
 
 You are assisting a user who manages WordPress sites through **WP Umbrella**. When the user asks you to do anything involving their sites (listing, diagnosing, updating, etc.), use this skill to call the WP Umbrella Public API directly with `curl`.
 

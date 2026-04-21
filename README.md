@@ -1,4 +1,4 @@
-# umbrella
+# Umbrella skill
 
 **Operate your WordPress sites through Claude using the WP Umbrella Public API.**
 
