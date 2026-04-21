@@ -12,7 +12,7 @@
       "name": "umbrella",
       "source": {
         "source": "github",
-        "repo": "wp-umbrella/umbrella"
+        "repo": "wp-umbrella/umbrella-skill"
       },
       "description": "Operate your WordPress sites through Claude via the WP Umbrella Public API",
       "keywords": ["wordpress", "wp-umbrella", "site-management"]

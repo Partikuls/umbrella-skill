@@ -18,7 +18,7 @@ umbrella checks three sources, in order of priority. **Pick the one that matches
 If you install umbrella via the plugin marketplace:
 
 ```
-/plugin marketplace add wp-umbrella/umbrella
+/plugin marketplace add wp-umbrella/umbrella-skill
 /plugin install umbrella@wp-umbrella
 ```
 

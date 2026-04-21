@@ -23,7 +23,7 @@ umbrella is a zero-dependency Claude Code plugin: just markdown + the official O
 Inside Claude Code, run:
 
 ```
-/plugin marketplace add wp-umbrella/umbrella
+/plugin marketplace add wp-umbrella/umbrella-skill
 /plugin install umbrella@wp-umbrella
 ```
 
@@ -34,8 +34,8 @@ That's it. `/plugin update umbrella@wp-umbrella` keeps you on the latest release
 If you want to hack on the plugin itself:
 
 ```bash
-git clone https://github.com/wp-umbrella/umbrella.git
-claude --plugin-dir ./umbrella
+git clone https://github.com/wp-umbrella/umbrella-skill.git
+claude --plugin-dir ./umbrella-skill
 ```
 
 ### Other AI agents (Cursor, Windsurf, ChatGPT, …)
@@ -157,4 +157,4 @@ umbrella instructs Claude to **always confirm with you** before any mutating cal
 
 ## Feedback
 
-Open an issue at https://github.com/wp-umbrella/umbrella/issues.
+Open an issue at https://github.com/wp-umbrella/umbrella-skill/issues.
