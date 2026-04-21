@@ -1,0 +1,21 @@
+{
+  "name": "wp-umbrella",
+  "owner": {
+    "name": "WP Umbrella",
+    "email": "support@wp-umbrella.com"
+  },
+  "metadata": {
+    "description": "Official WP Umbrella Claude Code plugins"
+  },
+  "plugins": [
+    {
+      "name": "umbrella",
+      "source": {
+        "source": "github",
+        "repo": "wp-umbrella/umbrella"
+      },
+      "description": "Operate your WordPress sites through Claude via the WP Umbrella Public API",
+      "keywords": ["wordpress", "wp-umbrella", "site-management"]
+    }
+  ]
+}

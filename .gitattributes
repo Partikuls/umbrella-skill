@@ -1,0 +1,4 @@
+# skills/ is generated from src/ by scripts/build.sh.
+# Mark its markdown as generated so GitHub collapses diffs by default
+# and skips it in language statistics.
+skills/**/*.md linguist-generated=true

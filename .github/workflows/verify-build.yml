@@ -1,0 +1,28 @@
+name: verify build
+
+# Ensures skills/ is in sync with src/. If a contributor edits src/ but
+# forgets to run scripts/build.sh, this job fails and shows the drift.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run build
+        run: bash scripts/build.sh
+
+      - name: Check skills/ matches committed output
+        run: |
+          if ! git diff --quiet -- skills/; then
+            echo "::error::skills/ is out of sync with src/. Run 'scripts/build.sh' and commit the regenerated output."
+            echo "Drift detected:"
+            git diff -- skills/
+            exit 1
+          fi
+          echo "✓ skills/ is in sync with src/"

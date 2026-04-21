@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sS -H \"Authorization: Bearer *\" *public-api.wp-umbrella.com*)"
+    ]
+  }
+}
