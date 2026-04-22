@@ -23,7 +23,7 @@ WordPress agencies and maintenance professionals managing 10 to 200+ client site
 - **Review vulnerabilities across all sites.** Surface known CVEs, sorted by severity.
 - **Stay in control.** Reading and checking runs freely. Anything that changes a site waits for your explicit confirmation.
 
-**How does it work?**
+## How does it work?**
 
 umbrella is a zero-dependency Claude Code plugin: just markdown + the official OpenAPI spec. Claude loads it as context, then calls the WP Umbrella API directly with `curl` on your behalf — no server to install, no binary to run.
 
