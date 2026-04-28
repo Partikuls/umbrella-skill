@@ -95,8 +95,8 @@ The operation is **queued**, not finished. To report real completion:
 
 1. Capture the `processId` from the response
 2. Poll `GET /processes?per_page=10` and match the id
-3. Wait 5s between polls; cap at 60s total
-4. Report `status` (`success` / `failed`) and any `entities_result` (status_code, visual_regression diff)
+3. Wait 5s between polls; cap at ~2 minutes total
+4. Report `code` (`success` / `failed`) and any `entities_result` (status_code, visual_regression diff)
 
 Example poll:
 

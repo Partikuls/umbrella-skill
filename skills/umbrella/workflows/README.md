@@ -11,13 +11,13 @@ Updates, database cleanup, scheduled work.
 - [safe-plugin-update.md](./maintenance/safe-plugin-update.md) — update plugins with pre-flight checks, safe mode, and visual regression verification
 - *Planned:* safe-theme-update, wp-core-update, database-cleanup, custom-work-scheduling
 
-### [`security/`](./security/) — Vulnerability management
+### `security/` — Vulnerability management
 
 Patching, audits, hardening.
 
 - *Planned:* triage-vulnerabilities, patch-critical-cves, plugin-hygiene-audit
 
-### [`diagnostics/`](./diagnostics/) — "Something's wrong"
+### `diagnostics/` — "Something's wrong"
 
 Fault finding, incident response, rollback.
 

@@ -17,7 +17,7 @@
 #
 # Compression backend: headless `claude -p "/caveman:compress <file>"`.
 # Requires the caveman plugin installed in Claude Code AND a `claude` CLI on
-# PATH. Set WP_PILOT_SKIP_COMPRESS=1 to short-circuit (pass-through copy).
+# PATH. Set UMBRELLA_SKIP_COMPRESS=1 to short-circuit (pass-through copy).
 #
 # Usage:
 #   ./scripts/build.sh
@@ -41,9 +41,9 @@ rm -rf skills/
 cp -R src/skills skills
 
 # 3. Compression backend selection
-SKIP_COMPRESS="${WP_PILOT_SKIP_COMPRESS:-0}"
+SKIP_COMPRESS="${UMBRELLA_SKIP_COMPRESS:-0}"
 if [ "$SKIP_COMPRESS" = "1" ]; then
-  echo "  WP_PILOT_SKIP_COMPRESS=1 — skipping caveman compression"
+  echo "  UMBRELLA_SKIP_COMPRESS=1 — skipping caveman compression"
 elif ! command -v claude >/dev/null 2>&1; then
   echo "  WARN: 'claude' CLI not found on PATH — skipping caveman compression"
   SKIP_COMPRESS=1

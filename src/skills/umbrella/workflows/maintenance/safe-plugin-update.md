@@ -86,6 +86,7 @@ Proceed? (yes/no)
 ## Step 5 — trigger the update
 
 ```bash
+UPDATE_RESPONSE=$(mktemp)
 curl -sS -X POST \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
@@ -96,9 +97,9 @@ curl -sS -X POST \
     "advanced_safe_update_validation": false
   }' \
   "https://public-api.wp-umbrella.com/projects/<ID>/plugins/update" \
-  | tee /tmp/umbrella-update.json
+  | tee "$UPDATE_RESPONSE"
 
-PROCESS_ID=$(jq -r '.data.processId' /tmp/umbrella-update.json)
+PROCESS_ID=$(jq -r '.data.processId' "$UPDATE_RESPONSE")
 echo "Tracking process: $PROCESS_ID"
 ```
 
