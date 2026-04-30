@@ -5,7 +5,7 @@ umbrella calls the WP Umbrella Public API with a **Bearer token** tied to your a
 ## Getting a token
 
 1. Sign in at https://app.wp-umbrella.com
-2. Go to **Settings → Public API** *(confirm exact menu path in your dashboard)*
+2. Go to **Settings → Public API**
 3. Generate a new token with the `public_api` scope
 4. Copy it immediately — most UIs only show tokens once
 

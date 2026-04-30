@@ -176,8 +176,6 @@ git commit -m "refine safe-plugin-update workflow"
 
 Full dev + test procedure (5 levels, build sanity → plugin runtime): [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-## Safety
-
 ## Safety and security
 
 We built this plugin knowing it would touch production client sites. A few things worth understanding before you install.
