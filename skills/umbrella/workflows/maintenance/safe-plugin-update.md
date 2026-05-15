@@ -109,14 +109,20 @@ echo "Tracking process: $PROCESS_ID"
 for i in $(seq 1 24); do   # 24 × 5s = 2 min max
   STATUS=$(curl -sS -H "Authorization: Bearer $TOKEN" \
     "https://public-api.wp-umbrella.com/projects/<ID>/processes?per_page=20" \
-    | jq -r ".data[] | select(.id==\"$PROCESS_ID\") | .code // empty")
-  if [ -n "$STATUS" ]; then
-    echo "Process finished with code: $STATUS"
-    break
-  fi
-  sleep 5
+    | jq -r ".data[] | select(.id==\"$PROCESS_ID\") | .code // \"pending\"")
+  case "$STATUS" in
+    success|failed|finished)
+      echo "Process finished with code: $STATUS"
+      break
+      ;;
+    *)
+      sleep 5
+      ;;
+  esac
 done
 ```
+
+`code` is terminal only when it equals `success`, `failed`, or `finished` (per the `status` enum in `openapi-public.json`). Treating any non-empty value as terminal would exit the loop on a transient `pending` and report success while the update is still running.
 
 If the loop times out, tell the user the update is still queued and give them the `processId` to check later with `GET /projects/<ID>/processes` (same endpoint as the poll).
 
