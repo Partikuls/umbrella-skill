@@ -5,7 +5,7 @@ name: verify build
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
 
 jobs:
@@ -19,9 +19,11 @@ jobs:
 
       - name: Check skills/ matches committed output
         run: |
-          if ! git diff --quiet -- skills/; then
+          DRIFT=$(git status --porcelain -- skills/)
+          if [ -n "$DRIFT" ]; then
             echo "::error::skills/ is out of sync with src/. Run 'scripts/build.sh' and commit the regenerated output."
             echo "Drift detected:"
+            echo "$DRIFT"
             git diff -- skills/
             exit 1
           fi
