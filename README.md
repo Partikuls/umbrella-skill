@@ -40,7 +40,8 @@ umbrella is a zero-dependency Claude Code plugin: just markdown + the official O
 ## Requirements
 
 - A **WP Umbrella** account with the Public API feature enabled
-- A **Public API token** — generate one in your dashboard under *Settings → Public API*
+- A **Public API token** — generate one in your dashboard under **Profile → Public API (for developers)**
+  > ⚠️ This is **not** the same as your dashboard↔plugin **connection key** (the key that links a WordPress site to WP Umbrella). The Public API token is an account-level developer token; reaching for the connection key here won't work and is a security footgun.
 - **Claude Code** installed (macOS, Linux, or Windows) — https://claude.com/claude-code
 
 ## Install
@@ -53,6 +54,11 @@ Inside Claude Code, run:
 ```
 
 That's it. `/plugin update umbrella@wp-umbrella` keeps you on the latest release.
+
+> **SSH-less machines:** if the install fails with `git@github.com: Permission denied (publickey)`, the installer is cloning over SSH on a machine without a GitHub SSH key. Tell git to use HTTPS instead, then re-run the install:
+> ```bash
+> git config --global url."https://github.com/".insteadOf "git@github.com:"
+> ```
 
 ### Manual install (for development or testing)
 
