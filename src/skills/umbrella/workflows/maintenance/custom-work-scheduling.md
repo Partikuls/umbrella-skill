@@ -25,7 +25,7 @@ Only creation is exposed by the Public API today. There is **no** GET/PUT/DELETE
 | `execution_date` | **yes** | `YYYY-MM-DD` | Date the work is (or was) done; for recurring works, the first occurrence |
 | `estimated_time` | **yes** | number | Duration value |
 | `estimated_time_unit` | **yes** | `MINUTES` \| `HOURS` \| `DAYS` | Unit of `estimated_time` |
-| `is_recurring` | no | boolean (default `false`) | Enables the recurrence fields below |
+| `is_recurring` | **yes** | boolean | The spec marks it optional, but the live API rejects requests without it (`"is_recurring" is required`) — **always send it**, `false` for one-time works |
 | `frequency` | if recurring | `WEEKLY` \| `MONTHLY` \| `QUARTERLY` | |
 | `type_frequency` | if recurring | `MONDAY`…`SUNDAY` or `BEGIN_Q1`…`BEGIN_Q4` | Weekday for `WEEKLY`; quarter anchor for `QUARTERLY` |
 | `specific_day` | if recurring | number | Day of month (1–31) for `MONTHLY`; required whenever `is_recurring` is `true` |
@@ -40,7 +40,7 @@ Recurrence combinations to use:
 | every 15th of the month | `MONTHLY` | *(omit)* | `15` |
 | every quarter, start of Q1 | `QUARTERLY` | `BEGIN_Q1` | `1` |
 
-The API requires `specific_day` whenever `is_recurring` is `true` — send `1` for weekly/quarterly works if the user gave no day.
+The API requires `specific_day` whenever `is_recurring` is `true` (error: `"schedule.specific_day" must be a number`) — send `1` for weekly/quarterly works if the user gave no day.
 
 ## Preconditions
 
@@ -98,7 +98,8 @@ curl -sS -X POST \
     "description": "Rewrote meta titles on 12 pages",
     "execution_date": "2026-08-26",
     "estimated_time": 2,
-    "estimated_time_unit": "HOURS"
+    "estimated_time_unit": "HOURS",
+    "is_recurring": false
   }' \
   "https://public-api.wp-umbrella.com/projects/<ID>/custom-works" \
   | jq '{code, id: .data.id, name: .data.name, execution_date: .data.execution_date, is_recurring: .data.is_recurring, scheduledWorkId: .data.scheduledWorkId}'
@@ -140,7 +141,7 @@ Tell the user, per project:
 
 | Response | What to do |
 |---|---|
-| `400` `bad_params` | A required field is missing or an enum value is wrong (e.g. `HOUR` instead of `HOURS`, `specific_day` missing on a recurring work). Re-read the table above, fix, and retry — do not re-ask for confirmation if the intended work is unchanged. |
+| `400` `bad_params` | A required field is missing or an enum value is wrong (e.g. `is_recurring` omitted, `HOUR` instead of `HOURS`, `specific_day` missing on a recurring work). Re-read the table above, fix, and retry — do not re-ask for confirmation if the intended work is unchanged. |
 | `401` `unauthorized_request` | Token missing/invalid → `references/auth.md` |
 | `404` `not_found` | Wrong project ID → go back to Step 1 |
 | Batch: one site fails | Report which sites succeeded and which failed; do not silently retry the failed ones |
