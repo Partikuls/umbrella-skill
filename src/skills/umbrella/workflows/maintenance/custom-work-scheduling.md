@@ -21,7 +21,7 @@ This workflow covers **creation**. The API also exposes `GET` (list), `GET /{cus
 | Field | Required | Type / values | Notes |
 |---|---|---|---|
 | `name` | **yes** | string | Short title shown in the dashboard and reports |
-| `description` | no | string | Free text |
+| `description` | no | string | Free text — but see the Step 2 quirk: the API currently 500s without it |
 | `execution_date` | **yes** | `YYYY-MM-DD` | Date the work is (or was) done; for recurring works, the first occurrence |
 | `estimated_time` | **yes** | number | Duration value |
 | `estimated_time_unit` | **yes** | `MINUTES` \| `HOURS` \| `DAYS` | Unit of `estimated_time` |
@@ -67,7 +67,7 @@ Fill the required fields from the user's message. Ask **only** for what is missi
 - `estimated_time` + `estimated_time_unit` — normalize: "30 min" → `30 MINUTES`, "2h" → `2 HOURS`, "half a day" → `4 HOURS`, "a day" → `1 DAYS`
 - Recurrence — only if the user said recurring/weekly/monthly/quarterly/every…
 
-Do not invent a `description`; leave it out unless the user provided detail.
+Do not invent a `description`; leave it out unless the user provided detail. **Temporary API quirk:** the create endpoint currently returns HTTP 500 when `description` is absent (observed 2026-09-03; the spec marks it optional). Until this is fixed server-side, if the user gave no detail, send the work's `name` as the `description` — do not fabricate content beyond that.
 
 ## Step 3 — present the plan and confirm
 
@@ -139,6 +139,7 @@ Tell the user, per project:
 | Response | What to do |
 |---|---|
 | `400` `bad_params` | A required field is missing or an enum value is wrong (e.g. `is_recurring` omitted, `HOUR` instead of `HOURS`, `specific_day` missing on a recurring work). Re-read the table above, fix, and retry — do not re-ask for confirmation if the intended work is unchanged. |
+| `500` on create | Temporary API quirk: the endpoint fails when `description` is absent. Verify nothing was created (dashboard, or `GET /projects/{projectId}/custom-works`), then retry the same payload with `description` set to the work's `name`. |
 | `401` `unauthorized_request` | Token missing/invalid → `references/auth.md` |
 | `404` `not_found` | Wrong project ID → go back to Step 1 |
 | Batch: one site fails | Report which sites succeeded and which failed; do not silently retry the failed ones |
