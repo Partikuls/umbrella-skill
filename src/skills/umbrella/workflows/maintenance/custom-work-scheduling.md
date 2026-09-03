@@ -14,7 +14,7 @@ Create a **custom work** on a WP Umbrella project: a tracked maintenance task (o
 
 `POST /projects/{projectId}/custom-works` — see `openapi-public.json` for the authoritative schema.
 
-Only creation is exposed by the Public API today. There is **no** GET/PUT/DELETE for custom works — you cannot list, edit, or delete them through the API; tell the user to do that in the WP Umbrella dashboard.
+This workflow covers **creation**. The API also exposes list/get/update/delete for custom works (added 2026-08-29), but the `openapi-public.json` embedded in this plugin does not describe them yet — until the spec is refreshed, point users to the WP Umbrella dashboard for listing, editing, or deleting works. Extending this workflow to those endpoints is a planned follow-up.
 
 ### Request body
 
@@ -28,19 +28,19 @@ Only creation is exposed by the Public API today. There is **no** GET/PUT/DELETE
 | `is_recurring` | **yes** | boolean | The spec marks it optional, but the live API rejects requests without it (`"is_recurring" is required`) — **always send it**, `false` for one-time works |
 | `frequency` | if recurring | `WEEKLY` \| `MONTHLY` \| `QUARTERLY` | |
 | `type_frequency` | if recurring | `MONDAY`…`SUNDAY` or `BEGIN_Q1`…`BEGIN_Q4` | Weekday for `WEEKLY`; quarter anchor for `QUARTERLY` |
-| `specific_day` | if recurring | number | Day of month (1–31) for `MONTHLY`; required whenever `is_recurring` is `true` |
-| `plugin_keys` | no | string[] | Plugin keys (`dir/file.php`) to associate with the work |
-| `clear_cache` | no | boolean | Whether cache clearing is part of the work |
+| `specific_day` | if recurring | number | Day of month (1–31) for `MONTHLY`. Only required for `MONTHLY` by the schema, but see the temporary quirk below |
+
+Do **not** send `plugin_keys` or `clear_cache`: they appear in some versions of the spec but the create endpoint silently ignores them — nothing is stored, so including them would mislead the user into thinking plugins were attached to the work.
 
 Recurrence combinations to use:
 
 | User says | `frequency` | `type_frequency` | `specific_day` |
 |---|---|---|---|
-| every Monday | `WEEKLY` | `MONDAY` | `1` |
+| every Monday | `WEEKLY` | `MONDAY` | `1` * |
 | every 15th of the month | `MONTHLY` | *(omit)* | `15` |
-| every quarter, start of Q1 | `QUARTERLY` | `BEGIN_Q1` | `1` |
+| every quarter, start of Q1 | `QUARTERLY` | `BEGIN_Q1` | `1` * |
 
-The API requires `specific_day` whenever `is_recurring` is `true` (error: `"schedule.specific_day" must be a number`) — send `1` for weekly/quarterly works if the user gave no day.
+\* **Temporary API quirk:** `specific_day` is only meant to be required for `MONTHLY`, but the API currently rejects a missing `specific_day` on any recurring work (error: `"schedule.specific_day" must be a number`). Until this is fixed server-side, always send `specific_day: 1` for `WEEKLY`/`QUARTERLY` works — the value is ignored for these frequencies, so `1` carries no meaning.
 
 ## Preconditions
 
@@ -79,7 +79,6 @@ Work     : Monthly content review
 Date     : 2026-09-01
 Estimate : 2 HOURS
 Recurring: yes — MONTHLY, day 1
-Plugins  : —
 Create this custom work? (yes/no)
 ```
 
@@ -119,9 +118,7 @@ curl -sS -X POST \
     "is_recurring": true,
     "frequency": "WEEKLY",
     "type_frequency": "MONDAY",
-    "specific_day": 1,
-    "plugin_keys": ["wp-seopress/seopress.php"],
-    "clear_cache": true
+    "specific_day": 1
   }' \
   "https://public-api.wp-umbrella.com/projects/<ID>/custom-works" \
   | jq '{code, id: .data.id, scheduledWorkId: .data.scheduledWorkId}'
@@ -135,7 +132,7 @@ Tell the user, per project:
 
 - ✅ *"Custom work #25 'Weekly plugin update pass' created on <site> — recurring weekly on Monday, first run 2026-09-01"*
 - Mention `scheduledWorkId` only for recurring works (it's what the dashboard uses to identify the series)
-- Remind them that edits/deletions happen in the WP Umbrella dashboard (Project → Maintenance / Custom works), since the API is create-only
+- For edits/deletions, point them to the WP Umbrella dashboard (Project → Maintenance / Custom works) — this workflow doesn't cover the list/edit/delete endpoints yet (see the Endpoint section)
 
 ## Error paths
 

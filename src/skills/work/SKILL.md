@@ -23,6 +23,8 @@ Examples:
 | `/umbrella:work 123 monthly content review on the 1st, 1h` | recurring MONTHLY, specific_day 1, 1 HOURS |
 | `/umbrella:work acme weekly plugin pass every monday 30min` | recurring WEEKLY, MONDAY, 30 MINUTES |
 
+Multi-word site names get split (only the first token is the site — same behavior as `/umbrella:sites` and `/umbrella:health`): tell the user to pass a distinctive name fragment or the numeric project ID instead.
+
 Creating a custom work is a **mutation** — always present the plan and wait for explicit confirmation (workflow Step 3) before the POST.
 
 ## Setup
