@@ -14,7 +14,7 @@ Create a **custom work** on a WP Umbrella project: a tracked maintenance task (o
 
 `POST /projects/{projectId}/custom-works` — see `openapi-public.json` for the authoritative schema.
 
-This workflow covers **creation**. The API also exposes list/get/update/delete for custom works (added 2026-08-29), but the `openapi-public.json` embedded in this plugin does not describe them yet — until the spec is refreshed, point users to the WP Umbrella dashboard for listing, editing, or deleting works. Extending this workflow to those endpoints is a planned follow-up.
+This workflow covers **creation**. The API also exposes `GET` (list), `GET /{customWorkId}`, `PUT` and `DELETE` for custom works — they are documented in `openapi-public.json`, so fall back to the spec if the user asks to list, edit, or delete works (the mutation gate applies to `PUT`/`DELETE`). A dedicated playbook for them is a planned follow-up; the WP Umbrella dashboard (Project → Maintenance / Custom works) remains the simplest place to manage existing works.
 
 ### Request body
 
@@ -25,12 +25,12 @@ This workflow covers **creation**. The API also exposes list/get/update/delete f
 | `execution_date` | **yes** | `YYYY-MM-DD` | Date the work is (or was) done; for recurring works, the first occurrence |
 | `estimated_time` | **yes** | number | Duration value |
 | `estimated_time_unit` | **yes** | `MINUTES` \| `HOURS` \| `DAYS` | Unit of `estimated_time` |
-| `is_recurring` | **yes** | boolean | The spec marks it optional, but the live API rejects requests without it (`"is_recurring" is required`) — **always send it**, `false` for one-time works |
+| `is_recurring` | **yes** | boolean | **Always send it** — `false` for one-time works |
 | `frequency` | if recurring | `WEEKLY` \| `MONTHLY` \| `QUARTERLY` | |
 | `type_frequency` | if recurring | `MONDAY`…`SUNDAY` or `BEGIN_Q1`…`BEGIN_Q4` | Weekday for `WEEKLY`; quarter anchor for `QUARTERLY` |
 | `specific_day` | if recurring | number | Day of month (1–31) for `MONTHLY`. Only required for `MONTHLY` by the schema, but see the temporary quirk below |
 
-Do **not** send `plugin_keys` or `clear_cache`: they appear in some versions of the spec but the create endpoint silently ignores them — nothing is stored, so including them would mislead the user into thinking plugins were attached to the work.
+Do **not** send `plugin_keys` or `clear_cache`: older versions of the spec listed them, but the create endpoint silently ignores them — nothing is stored.
 
 Recurrence combinations to use:
 
@@ -132,7 +132,7 @@ Tell the user, per project:
 
 - ✅ *"Custom work #25 'Weekly plugin update pass' created on <site> — recurring weekly on Monday, first run 2026-09-01"*
 - Mention `scheduledWorkId` only for recurring works (it's what the dashboard uses to identify the series)
-- For edits/deletions, point them to the WP Umbrella dashboard (Project → Maintenance / Custom works) — this workflow doesn't cover the list/edit/delete endpoints yet (see the Endpoint section)
+- For edits/deletions, point them to the WP Umbrella dashboard (Project → Maintenance / Custom works), or use the `PUT`/`DELETE` endpoints from the spec if they ask you to do it (see the Endpoint section)
 
 ## Error paths
 
